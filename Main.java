@@ -2,12 +2,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-    private HashMap<String, String> emails;
-    private HashMap<String, String> usuarios;
+    private HashMap<String, Usuario> usuarios;
     private Scanner scanner;
 
     public Main() {
-        emails = new HashMap<>();
         usuarios = new HashMap<>();
         scanner = new Scanner(System.in);
     }
@@ -45,47 +43,48 @@ public class Main {
 
     private void cadastrarUsuario() {
         System.out.print("Digite o nome de Usuário: ");
-        String usuario = scanner.nextLine();
-        if (usuarios.containsKey(usuario)) {
+        String nome = scanner.nextLine();
+        if (usuarios.containsKey(nome)) {
             System.out.println("Usuário já cadastrado!");
             return;
         }
-        System.out.println("Digite seu Email: ");
+        System.out.print("Digite seu Email: ");
         String email = scanner.nextLine();
-        if(emails.containsKey(email)) {
-            System.out.println("Email já cadastrado!");
-            return;
+        for (Usuario user : usuarios.values()) {
+            if (user.getEmail().equals(email)) {
+                System.out.println("Email já cadastrado!");
+                return;
+            }
         }
-
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
         System.out.print("Digite novamente sua senha: ");
         String senhaB = scanner.nextLine();
-        if(senha.equals(senhaB)){
-            usuarios.put(usuario, senha);
+        if (senha.equals(senhaB)) {
+            Usuario novoUsuario = new Usuario(nome, email, senha);
+            usuarios.put(nome, novoUsuario);
             System.out.println("Usuário cadastrado com sucesso!");
-            exibirMenu();
-        }else {
-            System.out.println("As senhas não são iguais tente novamente");
+        } else {
+            System.out.println("As senhas não são iguais, tente novamente");
             cadastrarUsuario();
         }
     }
 
     private void loginUsuario() {
         System.out.print("Digite seu nome de usuário: ");
-        String usuario = scanner.nextLine();
+        String nome = scanner.nextLine();
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
 
-        if (usuarios.containsKey(usuario) && usuarios.get(usuario).equals(senha)) {
-            System.out.println("Login bem-sucedido! Bem-vindo, " + usuario + "!");
+        if (usuarios.containsKey(nome) && usuarios.get(nome).validarSenha(senha)) {
+            System.out.println("Login bem-sucedido! Bem-vindo, " + nome + "!");
         } else {
             System.out.println("Usuário ou senha incorretos!");
         }
     }
 
     private void esqueciMinhaSenha() {
-
+        // Implementação futura
     }
 
     public static void main(String[] args) {
